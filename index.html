@@ -166,8 +166,7 @@
 
       <!-- Desktop nav -->
       <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-ink-soft">
-        <a href="#hero" class="nav-link hover:text-ink transition-colors">Hero</a>
-        <a href="#value-prop" class="nav-link hover:text-ink transition-colors">Value Prop</a>
+        <a href="#top" class="nav-link hover:text-ink transition-colors">Home</a>
         <a href="#expertise" class="nav-link hover:text-ink transition-colors">Expertise</a>
         <a href="#work" class="nav-link hover:text-ink transition-colors">Work</a>
         <a href="#certifications" class="nav-link hover:text-ink transition-colors">Certifications</a>
@@ -191,8 +190,7 @@
   <!-- Mobile menu -->
   <div id="mobileMenu" class="hidden lg:hidden border-t border-ink/10 bg-canvas">
     <nav class="flex flex-col px-6 py-6 gap-5 text-sm font-semibold text-ink-soft">
-      <a href="#hero" class="mobile-link nav-link">Hero</a>
-      <a href="#value-prop" class="mobile-link nav-link">Value Prop</a>
+      <a href="#top" class="mobile-link nav-link">Home</a>
       <a href="#expertise" class="mobile-link nav-link">Expertise</a>
       <a href="#work" class="mobile-link nav-link">Work</a>
       <a href="#certifications" class="mobile-link nav-link">Certifications</a>
@@ -600,7 +598,7 @@
   });
 
   // Active nav link on scroll
-  const sections = ['hero','value-prop','expertise','work','certifications','about','contact'].map(id => document.getElementById(id));
+  const sections = ['top','expertise','work','certifications','about','contact'].map(id => document.getElementById(id));
   const navLinks = document.querySelectorAll('.nav-link, .mobile-link');
   const setActive = () => {
     let current = '';
