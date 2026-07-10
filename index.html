@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth snap-y snap-mandatory">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -165,11 +165,13 @@
       </a>
 
       <!-- Desktop nav -->
-      <nav class="hidden lg:flex items-center gap-10 text-sm font-semibold text-ink-soft">
-        <a href="#about" class="nav-link hover:text-ink transition-colors">About</a>
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-ink-soft">
+        <a href="#hero" class="nav-link hover:text-ink transition-colors">Hero</a>
+        <a href="#value-prop" class="nav-link hover:text-ink transition-colors">Value Prop</a>
         <a href="#expertise" class="nav-link hover:text-ink transition-colors">Expertise</a>
         <a href="#work" class="nav-link hover:text-ink transition-colors">Work</a>
         <a href="#certifications" class="nav-link hover:text-ink transition-colors">Certifications</a>
+        <a href="#about" class="nav-link hover:text-ink transition-colors">About</a>
         <a href="#contact" class="nav-link hover:text-ink transition-colors">Contact</a>
       </nav>
 
@@ -189,18 +191,34 @@
   <!-- Mobile menu -->
   <div id="mobileMenu" class="hidden lg:hidden border-t border-ink/10 bg-canvas">
     <nav class="flex flex-col px-6 py-6 gap-5 text-sm font-semibold text-ink-soft">
-      <a href="#about" class="mobile-link">About</a>
-      <a href="#expertise" class="mobile-link">Expertise</a>
-      <a href="#work" class="mobile-link">Work</a>
-      <a href="#certifications" class="mobile-link">Certifications</a>
-      <a href="#contact" class="mobile-link">Contact</a>
+      <a href="#hero" class="mobile-link nav-link">Hero</a>
+      <a href="#value-prop" class="mobile-link nav-link">Value Prop</a>
+      <a href="#expertise" class="mobile-link nav-link">Expertise</a>
+      <a href="#work" class="mobile-link nav-link">Work</a>
+      <a href="#certifications" class="mobile-link nav-link">Certifications</a>
+      <a href="#about" class="mobile-link nav-link">About</a>
+      <a href="#contact" class="mobile-link nav-link">Contact</a>
       <a href="#contact" class="bg-action text-white text-center font-bold tracked px-6 py-3 rounded-full mt-2">GET IN TOUCH</a>
     </nav>
   </div>
 </header>
 
+<!-- ============ HERO ============ -->
+<section id="hero" class="min-h-screen h-screen flex flex-col justify-center snap-start relative overflow-hidden pt-24 pb-8 px-6 lg:px-10 bg-canvas">
+  <div class="absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full bg-action/5 blur-3xl"></div>
+  <div class="max-w-4xl mx-auto text-center relative reveal">
+    <p class="flex items-center justify-center gap-2 text-xs font-bold tracked-lg text-action mb-6">
+      <span class="diamond"></span> VIDEO EDITOR &amp; 3D PRODUCT MOTION DESIGNER
+    </p>
+    <p class="mt-7 text-base sm:text-lg text-ink-soft leading-relaxed max-w-2xl mx-auto">
+      A video editor and emerging 3D motion designer helping brands turn product concepts into visually precise, performance&#8209;driven content — built to a budget, a timeline, and a measurable goal.
+    </p>
+  </div>
+</section>
+
 <!-- ============ VALUE PROP ============ -->
-<section class="px-6 lg:px-10 py-20 lg:py-28 bg-ink text-white relative overflow-hidden">
+<section id="value-prop" class="min-h-screen h-screen flex flex-col justify-center snap-start relative overflow-hidden pt-24 pb-8 px-6 lg:px-10 bg-ink text-white">
+
   <div class="absolute top-0 right-0 w-96 h-96 bg-action/10 rounded-full blur-3xl"></div>
   <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-14 lg:gap-10 items-center relative">
 
@@ -264,7 +282,7 @@
 </section>
 
 <!-- ============ CORE EXPERTISE ============ -->
-<section id="expertise" class="px-6 lg:px-10 py-20 lg:py-28">
+<section id="expertise" class="min-h-screen h-screen flex flex-col justify-center snap-start relative overflow-hidden pt-24 pb-8 px-6 lg:px-10">
   <div class="max-w-7xl mx-auto">
     <div class="max-w-2xl mb-14 reveal">
       <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> WHAT I DO</p>
@@ -300,7 +318,7 @@
 </section>
 
 <!-- ============ FEATURED WORK ============ -->
-<section id="work" class="px-6 lg:px-10 py-20 lg:py-28 bg-mist">
+<section id="work" class="min-h-screen h-screen flex flex-col justify-center snap-start relative overflow-hidden pt-24 pb-8 px-6 lg:px-10 bg-mist">
   <div class="max-w-7xl mx-auto">
     <div class="max-w-2xl mb-14 reveal">
       <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> PROOF OF WORK</p>
@@ -372,53 +390,65 @@
   </div>
 </section>
 
-<!-- ============ BEHIND THE EDIT ============ -->
-<section class="px-6 lg:px-10 py-20 lg:py-28">
+<!-- ============ CERTIFICATIONS ============ -->
+<section id="certifications" class="px-6 lg:px-10 py-20 lg:py-28">
   <div class="max-w-7xl mx-auto">
     <div class="max-w-2xl mb-14 reveal">
-      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> PROCESS</p>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-ink">Behind the Edit</h2>
+      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> TRAINING</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-ink">Certifications</h2>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
-      <!-- 6 placeholder tiles -->
-      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <p class="text-xs font-bold tracked text-ink">EDITING SETUP</p>
-        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+    <div class="grid sm:grid-cols-2 gap-6">
+      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a5 5 0 100-10 5 5 0 000 10z"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
+        </div>
+        <div>
+          <p class="font-bold text-ink">Adobe Certified Professional</p>
+          <p class="text-sm text-ink-soft mt-1">After Effects &amp; Premiere Pro</p>
+        </div>
       </div>
-      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <p class="text-xs font-bold tracked text-ink">ON A SHOOT</p>
-        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+
+      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
+        </div>
+        <div>
+          <p class="font-bold text-ink">Blender Foundation Certified Training</p>
+          <p class="text-sm text-ink-soft mt-1">2025</p>
+        </div>
       </div>
-      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <p class="text-xs font-bold tracked text-ink">RENDER / TIMELINE</p>
-        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+
+      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
+        </div>
+        <div>
+          <p class="font-bold text-ink">YouTube Asset Management</p>
+          <p class="text-sm text-ink-soft mt-1">Content ownership &amp; rights certification</p>
+        </div>
       </div>
-      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <p class="text-xs font-bold tracked text-ink">3D / BLENDER WORK</p>
-        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
-      </div>
-      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <p class="text-xs font-bold tracked text-ink">SOUND DESIGN</p>
-        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
-      </div>
-      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <p class="text-xs font-bold tracked text-ink">CLIENT CALL / TEAM</p>
-        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+
+      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 006.5 22H20V4H6.5A2.5 2.5 0 004 6.5v13z"/></svg>
+          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
+        </div>
+        <div>
+          <p class="font-bold text-ink">Inside the Edit</p>
+          <p class="text-sm text-ink-soft mt-1">Television Editing Masterclass</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ ABOUT ============ -->
-<section id="about" class="px-6 lg:px-10 py-20 lg:py-28 bg-mist">
-  <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-14 items-start">
+<section id="about" class="min-h-screen h-screen flex flex-col justify-center snap-start relative overflow-hidden pt-24 pb-8 px-6 lg:px-10 bg-mist">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-14 items-start w-full">
 
     <div class="lg:col-span-5 reveal">
       <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> ABOUT</p>
@@ -476,64 +506,8 @@
   </div>
 </section>
 
-<!-- ============ CERTIFICATIONS ============ -->
-<section id="certifications" class="px-6 lg:px-10 py-20 lg:py-28">
-  <div class="max-w-7xl mx-auto">
-    <div class="max-w-2xl mb-14 reveal">
-      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> TRAINING</p>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-ink">Certifications</h2>
-    </div>
-
-    <div class="grid sm:grid-cols-2 gap-6">
-      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
-        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a5 5 0 100-10 5 5 0 000 10z"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
-          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
-        </div>
-        <div>
-          <p class="font-bold text-ink">Adobe Certified Professional</p>
-          <p class="text-sm text-ink-soft mt-1">After Effects &amp; Premiere Pro</p>
-        </div>
-      </div>
-
-      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
-        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
-        </div>
-        <div>
-          <p class="font-bold text-ink">Blender Foundation Certified Training</p>
-          <p class="text-sm text-ink-soft mt-1">2025</p>
-        </div>
-      </div>
-
-      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
-        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
-        </div>
-        <div>
-          <p class="font-bold text-ink">YouTube Asset Management</p>
-          <p class="text-sm text-ink-soft mt-1">Content ownership &amp; rights certification</p>
-        </div>
-      </div>
-
-      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
-        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 006.5 22H20V4H6.5A2.5 2.5 0 004 6.5v13z"/></svg>
-          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
-        </div>
-        <div>
-          <p class="font-bold text-ink">Inside the Edit</p>
-          <p class="text-sm text-ink-soft mt-1">Television Editing Masterclass</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ CONTACT / FOOTER ============ -->
-<footer id="contact" class="px-6 lg:px-10 pt-20 lg:pt-28 pb-10 bg-ink text-white">
+<footer id="contact" class="min-h-screen h-screen flex flex-col justify-center snap-start relative overflow-hidden pt-24 pb-8 px-6 lg:px-10 bg-ink text-white">
   <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-14">
 
     <div class="lg:col-span-5 reveal">
@@ -566,7 +540,7 @@
           </div>
           <span class="text-sm text-white/80 group-hover:text-white transition-colors">instagram.com/paculbascottie</span>
         </a>
-        <a href="https://tiktok.com/@paculbascottie" target="_blank" rel="noopener" class="flex items-center gap-4 group">
+        <a href="https://tiktok.com/@paculbascottie_" target="_blank" rel="noopener" class="flex items-center gap-4 group">
           <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-action group-hover:bg-action/10 transition-colors">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3v10.5a3.5 3.5 0 11-3.5-3.5"/><path d="M16 3c0 2.5 2 4.5 4.5 4.5"/></svg>
           </div>
@@ -639,8 +613,8 @@
   });
 
   // Active nav link on scroll
-  const sections = ['about','expertise','work','certifications','contact'].map(id => document.getElementById(id));
-  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = ['hero','value-prop','expertise','work','certifications','about','contact'].map(id => document.getElementById(id));
+  const navLinks = document.querySelectorAll('.nav-link, .mobile-link');
   const setActive = () => {
     let current = '';
     sections.forEach(sec => {
