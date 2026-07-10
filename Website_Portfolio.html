@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scottie Paculba — Video Editor & 3D Product Motion Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Anton&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          canvas: "#FFFFFF",
+          ink: "#1E293B",
+          "ink-soft": "#475569",
+          action: "#0099FF",
+          "action-light": "#38BDF8",
+          "action-dark": "#0077CC",
+          mist: "#F4F7FA",
+        },
+        fontFamily: {
+          sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+          display: ["Anton", "Inter", "sans-serif"],
+          mono: ["'JetBrains Mono'", "ui-monospace", "monospace"],
+        },
+        boxShadow: {
+          card: "0 1px 2px rgba(30,41,59,0.04), 0 12px 24px -12px rgba(30,41,59,0.12)",
+          "card-hover": "0 4px 10px rgba(30,41,59,0.06), 0 24px 48px -16px rgba(30,41,59,0.20)",
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html { scroll-padding-top: 88px; }
+  body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+  .tracked { letter-spacing: 0.14em; }
+  .tracked-lg { letter-spacing: 0.22em; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -6px;
+    height: 2px;
+    background: #0099FF;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .3s ease;
+  }
+  .nav-link:hover::after, .nav-link.active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  .nav-link.active { color: #1E293B; }
+
+  .btn-action {
+    transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
+  }
+  .btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -8px rgba(0,153,255,0.45);
+  }
+  .btn-outline {
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+  }
+  .btn-outline:hover {
+    background-color: #1E293B;
+    color: #FFFFFF;
+  }
+
+  .grid-card {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+  }
+  .grid-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 48px -16px rgba(30,41,59,0.20);
+    border-color: #0099FF;
+  }
+
+  .stat-fade {
+    transition: transform .3s ease;
+  }
+  .stat-card:hover .stat-fade { transform: translateX(4px); }
+
+  .diamond {
+    width: 6px; height: 6px;
+    background: #0099FF;
+    transform: rotate(45deg);
+    display: inline-block;
+  }
+
+  .upload-frame {
+    background-image:
+      linear-gradient(#1E293B22 1px, transparent 1px),
+      linear-gradient(90deg, #1E293B22 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  input:focus, textarea:focus { outline: none; }
+
+  .pulse-dot { position: relative; }
+  .pulse-dot::after {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: 9999px;
+    background: currentColor;
+    animation: pulse-ring 1.8s cubic-bezier(0.4,0,0.6,1) infinite;
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.7; }
+    75%, 100% { transform: scale(2.6); opacity: 0; }
+  }
+
+  .placeholder-tile {
+    background-image: repeating-linear-gradient(135deg, currentColor 0, currentColor 1px, transparent 1px, transparent 10px);
+  }
+
+  .work-card { transition: border-color .3s ease, background-color .3s ease, transform .3s ease, box-shadow .3s ease; }
+  .work-card:hover { transform: translateY(-4px); }
+  .work-card.is-active { border-color: #0099FF; box-shadow: 0 16px 32px -16px rgba(0,153,255,0.35); }
+  .work-card .play-badge { transition: background-color .3s ease, transform .3s ease; }
+  .work-card.is-active .play-badge, .work-card:hover .play-badge { background-color: #0099FF; transform: scale(1.08); }
+  .work-card.is-active .play-badge svg, .work-card:hover .play-badge svg { fill: #FFFFFF; }
+  .work-card .thumb-icon { transition: transform .4s ease; }
+  .work-card:hover .thumb-icon { transform: scale(1.06); }
+
+  #workDetail { transition: opacity .35s ease, transform .35s ease; }
+  #workDetail.switching { opacity: 0; transform: translateY(8px); }
+
+  .stat-count { font-variant-numeric: tabular-nums; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body class="bg-canvas text-ink antialiased">
+
+<!-- ============ NAV ============ -->
+<header id="top" class="fixed top-0 inset-x-0 z-50 bg-canvas/90 backdrop-blur-md border-b border-ink/10">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="h-20 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#top" class="flex items-center gap-3 group">
+        <svg width="34" height="34" viewBox="0 0 40 40" class="shrink-0">
+          <polygon points="6,15 15,10 24,15 15,20" fill="#0099FF"/>
+          <polygon points="6,15 15,20 15,30 6,25" fill="#1E293B"/>
+          <polygon points="15,20 24,15 24,25 15,30" fill="#1E293B" fill-opacity="0.75"/>
+          <path d="M14 27 Q22 24 27 14" stroke="#0099FF" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <polygon points="26,10 34,15 26,20" fill="#1E293B"/>
+        </svg>
+        <div class="leading-none">
+          <p class="font-extrabold text-lg tracked text-ink">SCOTTIE PACULBA</p>
+          <p class="text-[10px] tracked-lg text-action font-semibold mt-1">EDIT. ANIMATE. PERFORM.</p>
+        </div>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden lg:flex items-center gap-10 text-sm font-semibold text-ink-soft">
+        <a href="#about" class="nav-link hover:text-ink transition-colors">About</a>
+        <a href="#expertise" class="nav-link hover:text-ink transition-colors">Expertise</a>
+        <a href="#work" class="nav-link hover:text-ink transition-colors">Work</a>
+        <a href="#certifications" class="nav-link hover:text-ink transition-colors">Certifications</a>
+        <a href="#contact" class="nav-link hover:text-ink transition-colors">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="#contact" class="hidden sm:inline-flex btn-action bg-action text-white text-sm font-bold tracked px-6 py-3 rounded-full hover:bg-action-dark">
+          GET IN TOUCH
+        </a>
+        <!-- Mobile toggle -->
+        <button id="menuBtn" class="lg:hidden p-2 text-ink" aria-label="Open menu">
+          <svg id="iconOpen" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg id="iconClose" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="hidden"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="hidden lg:hidden border-t border-ink/10 bg-canvas">
+    <nav class="flex flex-col px-6 py-6 gap-5 text-sm font-semibold text-ink-soft">
+      <a href="#about" class="mobile-link">About</a>
+      <a href="#expertise" class="mobile-link">Expertise</a>
+      <a href="#work" class="mobile-link">Work</a>
+      <a href="#certifications" class="mobile-link">Certifications</a>
+      <a href="#contact" class="mobile-link">Contact</a>
+      <a href="#contact" class="bg-action text-white text-center font-bold tracked px-6 py-3 rounded-full mt-2">GET IN TOUCH</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="pt-32 pb-16 lg:pt-44 lg:pb-20 px-6 lg:px-10 relative overflow-hidden">
+  <div class="absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full bg-action/5 blur-3xl"></div>
+  <div class="max-w-4xl mx-auto text-center relative reveal">
+    <p class="flex items-center justify-center gap-2 text-xs font-bold tracked-lg text-action mb-6">
+      <span class="diamond"></span> VIDEO EDITOR &amp; 3D PRODUCT MOTION DESIGNER
+    </p>
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.08] tracking-tight text-ink">
+      Translating raw concepts into photorealistic, high&#8209;converting 3D product motion assets.
+    </h1>
+    <p class="mt-7 text-base sm:text-lg text-ink-soft leading-relaxed max-w-2xl mx-auto">
+      A video editor and emerging 3D motion designer helping brands turn product concepts into visually precise, performance&#8209;driven content — built to a budget, a timeline, and a measurable goal.
+    </p>
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <a href="#work" class="btn-action inline-flex items-center gap-2 bg-action text-white font-bold tracked px-8 py-4 rounded-full text-sm">
+        VIEW SHOWREEL
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="#about" class="btn-outline inline-flex items-center gap-2 border-2 border-ink text-ink font-bold tracked px-8 py-4 rounded-full text-sm">
+        READ PROFILE
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VALUE PROP ============ -->
+<section class="px-6 lg:px-10 py-20 lg:py-28 bg-ink text-white relative overflow-hidden">
+  <div class="absolute top-0 right-0 w-96 h-96 bg-action/10 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-14 lg:gap-10 items-center relative">
+
+    <div class="lg:col-span-7 reveal">
+      <p class="font-mono flex items-center gap-3 text-xs text-action-light mb-6">
+        <span class="relative w-2 h-2"><span class="pulse-dot absolute inset-0 rounded-full bg-action-light"></span><span class="relative block w-2 h-2 rounded-full bg-action-light"></span></span>
+        00:00:00:00 — VIDEO EDITOR &amp; 3D MOTION DESIGNER
+      </p>
+      <h2 class="font-display uppercase text-4xl sm:text-5xl lg:text-6xl leading-[1.02] tracking-wide text-action-light">
+        Making Your Content Impossible To Scroll Past
+      </h2>
+      <p class="mt-7 text-base sm:text-lg text-white/70 leading-relaxed max-w-xl">
+        I edit, animate, and design short-form and long-form video for creators and brands — pairing story-driven editing with 3D motion design in Blender, backed by a business mindset that keeps every edit tied to a real goal.
+      </p>
+
+      <div class="mt-9 flex items-center gap-4">
+        <a href="#contact" class="btn-action inline-flex items-center gap-2 bg-action text-white font-bold tracked px-7 py-4 rounded-lg text-sm">
+          BOOK AN EDITING CALL
+        </a>
+        <svg class="hidden sm:block text-action-light/70" width="48" height="44" viewBox="0 0 48 44" fill="none">
+          <path d="M2 2C10 6 16 14 14 24C12 34 22 40 44 40" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 5" stroke-linecap="round"/>
+          <path d="M38 34l6 6-7 3" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="mt-12 grid grid-cols-2 gap-3 max-w-lg">
+        <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5">
+          <div class="w-8 h-8 rounded-full bg-action-light/15 flex items-center justify-center shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <div class="leading-tight">
+            <p class="font-mono text-[11px] font-semibold tracked text-white">ADOBE CERTIFIED</p>
+            <p class="text-[11px] text-white/50 mt-0.5">After Effects &amp; Premiere Pro</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5">
+          <div class="w-8 h-8 rounded-full bg-action-light/15 flex items-center justify-center shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <div class="leading-tight">
+            <p class="font-mono text-[11px] font-semibold tracked text-white">BLENDER FOUNDATION</p>
+            <p class="text-[11px] text-white/50 mt-0.5">Certified Training, 2025</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5">
+          <div class="w-8 h-8 rounded-full bg-action-light/15 flex items-center justify-center shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+          </div>
+          <div class="leading-tight">
+            <p class="font-mono text-[11px] font-semibold tracked text-white">+25% RETENTION</p>
+            <p class="text-[11px] text-white/50 mt-0.5">Avg. lift on short-form edits</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5">
+          <div class="w-8 h-8 rounded-full bg-action-light/15 flex items-center justify-center shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+          </div>
+          <div class="leading-tight">
+            <p class="font-mono text-[11px] font-semibold tracked text-white">+40% ENGAGEMENT</p>
+            <p class="text-[11px] text-white/50 mt-0.5">Growth on long-form content</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo container -->
+    <div class="lg:col-span-5 reveal">
+      <div class="relative mx-auto max-w-sm">
+        <div class="placeholder-tile relative aspect-[10/13] rounded-2xl border-2 border-dashed border-action-light/40 bg-white/5 text-action-light/10 flex flex-col items-center justify-center text-center px-8">
+          <div class="text-action-light/10 absolute inset-0 rounded-2xl overflow-hidden"></div>
+          <svg class="relative" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <p class="relative font-bold text-white tracked text-sm mt-5">ADD YOUR PHOTO</p>
+          <p class="relative font-mono text-[11px] text-white/40 mt-2">Portrait &middot; 1000&times;1300px</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ CORE EXPERTISE ============ -->
+<section id="expertise" class="px-6 lg:px-10 py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto">
+    <div class="max-w-2xl mb-14 reveal">
+      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> WHAT I DO</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-ink">Core Expertise</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="grid-card reveal p-8 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-12 h-12 rounded-xl bg-action/10 flex items-center justify-center mb-6">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-ink mb-3">3D Product Modeling &amp; Animation</h3>
+        <p class="text-sm text-ink-soft leading-relaxed">Blender hard-surface modeling built for photorealistic product assets — accurate geometry, physically-based materials, and studio-grade lighting for renders that hold up close.</p>
+      </div>
+
+      <div class="grid-card reveal p-8 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-12 h-12 rounded-xl bg-action/10 flex items-center justify-center mb-6">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H8l-4 4V4z"/><path d="M8 9h8M8 12h5"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-ink mb-3">Kinetic Motion Graphics</h3>
+        <p class="text-sm text-ink-soft leading-relaxed">After Effects title sequences, lower thirds, and brand identity graphics that keep a viewer's eye moving without ever feeling noisy.</p>
+      </div>
+
+      <div class="grid-card reveal p-8 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-12 h-12 rounded-xl bg-action/10 flex items-center justify-center mb-6">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-ink mb-3">Performance-Driven Editing</h3>
+        <p class="text-sm text-ink-soft leading-relaxed">Pacing, color grading, and sound design tuned around one metric: retention. Every trim is a decision made with the algorithm and the audience in mind.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED WORK ============ -->
+<section id="work" class="px-6 lg:px-10 py-20 lg:py-28 bg-mist">
+  <div class="max-w-7xl mx-auto">
+    <div class="max-w-2xl mb-14 reveal">
+      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> PROOF OF WORK</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-ink">Featured Work</h2>
+      <p class="mt-4 text-sm text-ink-soft">Select a project to see the full case study.</p>
+    </div>
+
+    <!-- Project grid -->
+    <div id="workGrid" class="grid sm:grid-cols-2 gap-6 mb-6">
+
+      <button data-index="0" class="work-card is-active reveal text-left bg-white rounded-2xl border-2 border-ink/10 shadow-card overflow-hidden">
+        <div class="placeholder-tile aspect-video bg-mist text-ink/10 relative flex items-center justify-center">
+          <div class="play-badge thumb-icon w-12 h-12 rounded-full bg-white border border-ink/10 flex items-center justify-center shadow-card">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#94A3B8"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="p-6">
+          <p class="text-xs font-bold tracked text-action mb-2">SOCIAL / SHORT-FORM</p>
+          <h3 class="font-bold text-ink mb-2">Freelance Short-Form Campaigns</h3>
+          <p class="text-xs text-ink-soft">30+ high-retention edits &middot; 25% avg. retention increase &middot; 48-hr turnaround</p>
+        </div>
+      </button>
+
+      <button data-index="1" class="work-card reveal text-left bg-white rounded-2xl border-2 border-ink/10 shadow-card overflow-hidden">
+        <div class="placeholder-tile aspect-video bg-mist text-ink/10 relative flex items-center justify-center">
+          <div class="play-badge thumb-icon w-12 h-12 rounded-full bg-white border border-ink/10 flex items-center justify-center shadow-card">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#94A3B8"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="p-6">
+          <p class="text-xs font-bold tracked text-action mb-2">LONG-FORM / CHANNEL GROWTH</p>
+          <h3 class="font-bold text-ink mb-2">Inertia Studios — Channel Growth</h3>
+          <p class="text-xs text-ink-soft">15+ long-form videos &middot; 40% subscriber engagement growth</p>
+        </div>
+      </button>
+
+      <button data-index="2" class="work-card reveal text-left bg-white rounded-2xl border-2 border-ink/10 shadow-card overflow-hidden">
+        <div class="placeholder-tile aspect-video bg-mist text-ink/10 relative flex items-center justify-center">
+          <div class="play-badge thumb-icon w-12 h-12 rounded-full bg-white border border-ink/10 flex items-center justify-center shadow-card">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#94A3B8"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="p-6">
+          <p class="text-xs font-bold tracked text-action mb-2">SHOWREEL</p>
+          <h3 class="font-bold text-ink mb-2">3D Motion — Blender Showcase</h3>
+          <p class="text-xs text-ink-soft">A running reel of product renders, hard-surface models, and animation studies.</p>
+        </div>
+      </button>
+
+      <button data-index="3" class="work-card reveal text-left bg-white rounded-2xl border-2 border-dashed border-ink/20 shadow-card overflow-hidden">
+        <div class="placeholder-tile aspect-video bg-mist text-ink/10 relative flex items-center justify-center">
+          <div class="play-badge thumb-icon w-12 h-12 rounded-full bg-white border border-ink/10 flex items-center justify-center shadow-card">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+        </div>
+        <div class="p-6">
+          <p class="text-xs font-bold tracked text-action mb-2">CASE STUDY</p>
+          <h3 class="font-bold text-ink mb-2">Add Your Next Project</h3>
+          <p class="text-xs text-ink-soft">This space is ready for the next brief.</p>
+        </div>
+      </button>
+
+    </div>
+
+    <!-- Detail panel -->
+    <div id="workDetail" class="reveal grid lg:grid-cols-2 gap-10 lg:gap-14 bg-white rounded-2xl border border-ink/10 shadow-card p-8 lg:p-12 items-center">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============ BEHIND THE EDIT ============ -->
+<section class="px-6 lg:px-10 py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto">
+    <div class="max-w-2xl mb-14 reveal">
+      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> PROCESS</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-ink">Behind the Edit</h2>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
+      <!-- 6 placeholder tiles -->
+      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <p class="text-xs font-bold tracked text-ink">EDITING SETUP</p>
+        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+      </div>
+      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <p class="text-xs font-bold tracked text-ink">ON A SHOOT</p>
+        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+      </div>
+      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <p class="text-xs font-bold tracked text-ink">RENDER / TIMELINE</p>
+        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+      </div>
+      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <p class="text-xs font-bold tracked text-ink">3D / BLENDER WORK</p>
+        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+      </div>
+      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <p class="text-xs font-bold tracked text-ink">SOUND DESIGN</p>
+        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+      </div>
+      <div class="grid-card reveal aspect-square rounded-2xl bg-white border-2 border-dashed border-ink/20 flex flex-col items-center justify-center gap-3 text-center px-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <p class="text-xs font-bold tracked text-ink">CLIENT CALL / TEAM</p>
+        <p class="font-mono text-[10px] text-ink-soft">Add photo</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" class="px-6 lg:px-10 py-20 lg:py-28 bg-mist">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-14 items-start">
+
+    <div class="lg:col-span-5 reveal">
+      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> ABOUT</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-ink leading-tight">Yes, I Can Help.</h2>
+      <p class="mt-6 text-base text-ink-soft leading-relaxed">
+        I bring an Information Systems background to a creative craft — which means every edit is made with an eye on the objective behind it, not just the aesthetics. I've worked remotely with international clients across time zones, budgets, and briefs, and I show up with the same thing every time: reliable delivery and content built to move a number, not just look good doing it.
+      </p>
+    </div>
+
+    <div class="lg:col-span-7 reveal">
+      <div class="bg-white rounded-2xl border border-ink/10 shadow-card p-8 lg:p-10 space-y-6">
+
+        <div class="flex gap-4">
+          <div class="w-9 h-9 rounded-full bg-action/10 flex items-center justify-center shrink-0 mt-0.5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-ink">Information Systems background</p>
+            <p class="text-sm text-ink-soft mt-1 leading-relaxed">A structured, business-first way of thinking applied to every creative decision — from project scope to final delivery.</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <div class="w-9 h-9 rounded-full bg-action/10 flex items-center justify-center shrink-0 mt-0.5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-ink">Remote freelance experience</p>
+            <p class="text-sm text-ink-soft mt-1 leading-relaxed">Proven track record working with international clients, including teams based in the United Kingdom, across full post-production workflows.</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <div class="w-9 h-9 rounded-full bg-action/10 flex items-center justify-center shrink-0 mt-0.5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-ink">Committed to business objectives</p>
+            <p class="text-sm text-ink-soft mt-1 leading-relaxed">Every project is scoped against a real goal — retention, engagement, or conversion — so the work is judged on results, not just visuals.</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <div class="w-9 h-9 rounded-full bg-action/10 flex items-center justify-center shrink-0 mt-0.5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-ink">Growing 3D discipline</p>
+            <p class="text-sm text-ink-soft mt-1 leading-relaxed">Actively expanding into Blender-based 3D modeling and animation to bring product-grade motion into every deliverable.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CERTIFICATIONS ============ -->
+<section id="certifications" class="px-6 lg:px-10 py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto">
+    <div class="max-w-2xl mb-14 reveal">
+      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> TRAINING</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-ink">Certifications</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-6">
+      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a5 5 0 100-10 5 5 0 000 10z"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
+        </div>
+        <div>
+          <p class="font-bold text-ink">Adobe Certified Professional</p>
+          <p class="text-sm text-ink-soft mt-1">After Effects &amp; Premiere Pro</p>
+        </div>
+      </div>
+
+      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
+        </div>
+        <div>
+          <p class="font-bold text-ink">Blender Foundation Certified Training</p>
+          <p class="text-sm text-ink-soft mt-1">2025</p>
+        </div>
+      </div>
+
+      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
+        </div>
+        <div>
+          <p class="font-bold text-ink">YouTube Asset Management</p>
+          <p class="text-sm text-ink-soft mt-1">Content ownership &amp; rights certification</p>
+        </div>
+      </div>
+
+      <div class="grid-card reveal flex items-start gap-5 p-7 rounded-2xl border border-ink/10 bg-white shadow-card">
+        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-ink/20 bg-mist flex flex-col items-center justify-center gap-1 shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 006.5 22H20V4H6.5A2.5 2.5 0 004 6.5v13z"/></svg>
+          <p class="font-mono text-[8px] tracked text-ink-soft">LOGO</p>
+        </div>
+        <div>
+          <p class="font-bold text-ink">Inside the Edit</p>
+          <p class="text-sm text-ink-soft mt-1">Television Editing Masterclass</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT / FOOTER ============ -->
+<footer id="contact" class="px-6 lg:px-10 pt-20 lg:pt-28 pb-10 bg-ink text-white">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-14">
+
+    <div class="lg:col-span-5 reveal">
+      <p class="flex items-center gap-2 text-xs font-bold tracked-lg text-action mb-4"><span class="diamond"></span> CONTACT</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold leading-tight">Let's build something<br class="hidden sm:block"> impossible to scroll past.</h2>
+      <p class="mt-6 text-white/60 text-sm leading-relaxed max-w-sm">Available for freelance edits, 3D motion projects, and long-term collaborations. Usually replies within 24 hours.</p>
+
+      <div class="mt-10 space-y-5">
+        <a href="mailto:paculbascottie@gmail.com" class="flex items-center gap-4 group">
+          <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-action group-hover:bg-action/10 transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+          </div>
+          <span class="text-sm text-white/80 group-hover:text-white transition-colors">paculbascottie@gmail.com</span>
+        </a>
+        <a href="tel:+639201951993" class="flex items-center gap-4 group">
+          <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-action group-hover:bg-action/10 transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <span class="text-sm text-white/80 group-hover:text-white transition-colors">0920 195 1993</span>
+        </a>
+        <a href="https://linkedin.com/in/paculbascottie" target="_blank" rel="noopener" class="flex items-center gap-4 group">
+          <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-action group-hover:bg-action/10 transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <span class="text-sm text-white/80 group-hover:text-white transition-colors">linkedin.com/in/paculbascottie</span>
+        </a>
+        <a href="https://instagram.com/paculbascottie" target="_blank" rel="noopener" class="flex items-center gap-4 group">
+          <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-action group-hover:bg-action/10 transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <span class="text-sm text-white/80 group-hover:text-white transition-colors">instagram.com/paculbascottie</span>
+        </a>
+        <a href="https://tiktok.com/@paculbascottie" target="_blank" rel="noopener" class="flex items-center gap-4 group">
+          <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-action group-hover:bg-action/10 transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3v10.5a3.5 3.5 0 11-3.5-3.5"/><path d="M16 3c0 2.5 2 4.5 4.5 4.5"/></svg>
+          </div>
+          <span class="text-sm text-white/80 group-hover:text-white transition-colors">tiktok.com/@paculbascottie_</span>
+        </a>
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span class="text-sm text-white/80">Dinagat Islands, Philippines</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-7 reveal">
+      <form class="bg-white/5 border border-white/10 rounded-2xl p-8 lg:p-10 backdrop-blur-sm">
+        <div class="grid sm:grid-cols-2 gap-6">
+          <div class="sm:col-span-1">
+            <label class="block text-xs font-bold tracked text-white/60 mb-2">NAME</label>
+            <input type="text" placeholder="Your name" class="w-full bg-transparent border-b-2 border-white/20 focus:border-action py-3 text-sm text-white placeholder-white/30 transition-colors">
+          </div>
+          <div class="sm:col-span-1">
+            <label class="block text-xs font-bold tracked text-white/60 mb-2">EMAIL</label>
+            <input type="email" placeholder="you@company.com" class="w-full bg-transparent border-b-2 border-white/20 focus:border-action py-3 text-sm text-white placeholder-white/30 transition-colors">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold tracked text-white/60 mb-2">MESSAGE</label>
+            <textarea rows="4" placeholder="Tell me about your project..." class="w-full bg-transparent border-b-2 border-white/20 focus:border-action py-3 text-sm text-white placeholder-white/30 transition-colors resize-none"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn-action mt-8 inline-flex items-center gap-2 bg-action text-white font-bold tracked px-8 py-4 rounded-full text-sm">
+          SEND MESSAGE
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <svg width="20" height="20" viewBox="0 0 40 40">
+        <polygon points="6,15 15,10 24,15 15,20" fill="#0099FF"/>
+        <polygon points="6,15 15,20 15,30 6,25" fill="#FFFFFF" fill-opacity="0.85"/>
+        <polygon points="15,20 24,15 24,25 15,30" fill="#FFFFFF" fill-opacity="0.55"/>
+      </svg>
+      <span class="text-xs tracked text-white/50 font-semibold">SCOTTIE PACULBA</span>
+    </div>
+    <p class="text-xs text-white/40 tracked">&copy; 2026 SCOTTIE MICHAEL S. PACULBA. ALL RIGHTS RESERVED.</p>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const iconOpen = document.getElementById('iconOpen');
+  const iconClose = document.getElementById('iconClose');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+    iconOpen.classList.toggle('hidden');
+    iconClose.classList.toggle('hidden');
+  });
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+    });
+  });
+
+  // Active nav link on scroll
+  const sections = ['about','expertise','work','certifications','contact'].map(id => document.getElementById(id));
+  const navLinks = document.querySelectorAll('.nav-link');
+  const setActive = () => {
+    let current = '';
+    sections.forEach(sec => {
+      if (sec && window.scrollY >= sec.offsetTop - 140) current = sec.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  };
+  window.addEventListener('scroll', setActive);
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---- Featured Work: interactive card + detail panel ----
+  const projects = [
+    {
+      badge: "Social / Short-Form",
+      title: "Freelance Short-Form Campaigns",
+      meta: "Self-Employed / Remote, Philippines — Jul 2024 to Mar 2025",
+      description: "Edited 30+ high-retention short-form videos for digital creators, using fast-paced pacing, dynamic typography, and sound design. Also built custom 3D asset overlays in Blender for product showcase videos, aligning visual outcomes with client branding and marketing goals — all under tight 48-hour turnarounds.",
+      stats: [
+        { value: "25%", label: "Avg. retention increase" },
+        { value: "30+", label: "Short-form videos edited" },
+        { value: "48HR", label: "Avg. turnaround" }
+      ],
+      cta: "VIEW SAMPLE REEL"
+    },
+    {
+      badge: "Long-Form / Channel Growth",
+      title: "Inertia Studios — Channel Growth",
+      meta: "Content Creator & Video Editor, Inertia Studios — London, UK — Oct 2024 to Present",
+      description: "Produced and conceptualized 15+ long-form YouTube videos, handling visual composition and motion graphics. Integrated After Effects motion templates and lower-thirds to establish a cohesive visual identity, while collaborating with stakeholders on budget and delivery timelines.",
+      stats: [
+        { value: "40%", label: "Subscriber engagement growth" },
+        { value: "15+", label: "Long-form videos produced" },
+        { value: "ONG.", label: "Ongoing since Oct 2024" }
+      ],
+      cta: "VIEW SAMPLE REEL"
+    },
+    {
+      badge: "Showreel",
+      title: "3D Motion — Blender Showcase",
+      meta: "Personal Project — Ongoing",
+      description: "A running reel of hard-surface product models, physically-based materials, and short animation studies built in Blender — the testing ground for techniques that later make it into client work.",
+      stats: [
+        { value: "2025", label: "Blender certified" },
+        { value: "3D", label: "Hard-surface modeling" },
+        { value: "PBR", label: "Material studies" }
+      ],
+      cta: "VIEW SHOWREEL"
+    }
+  ];
+
+  const workDetail = document.getElementById('workDetail');
+  const workCards = document.querySelectorAll('#workGrid .work-card');
+
+  function statBlock(stat) {
+    return `<div><p class="text-3xl font-extrabold text-action stat-count">${stat.value}</p><p class="text-xs text-ink-soft mt-1">${stat.label}</p></div>`;
+  }
+
+  function renderProject(p) {
+    workDetail.innerHTML = `
+      <div>
+        <span class="inline-block text-xs font-bold tracked text-action bg-action/10 rounded-full px-4 py-1.5 mb-5">${p.badge}</span>
+        <h3 class="text-2xl sm:text-3xl font-extrabold text-ink mb-3">${p.title}</h3>
+        <p class="font-mono text-xs text-ink-soft mb-6">${p.meta}</p>
+        <p class="text-sm text-ink-soft leading-relaxed mb-8">${p.description}</p>
+        <div class="grid grid-cols-3 gap-6 mb-8">${p.stats.map(statBlock).join('')}</div>
+        <button class="bg-ink text-white font-bold tracked px-7 py-4 rounded-lg text-xs hover:bg-action transition-colors">${p.cta}</button>
+      </div>
+      <div class="placeholder-tile aspect-video rounded-2xl border-2 border-dashed border-ink/20 bg-mist text-ink/10 flex flex-col items-center justify-center text-center px-6">
+        <div class="w-14 h-14 rounded-full bg-white border border-ink/10 flex items-center justify-center shadow-card">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#0099FF"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <p class="font-bold text-ink tracked text-sm mt-5">ADD PROJECT THUMBNAIL</p>
+        <p class="font-mono text-[11px] text-ink-soft mt-2">16:9 &middot; or embed video link</p>
+      </div>
+    `;
+  }
+
+  function renderEmptyState() {
+    workDetail.innerHTML = `
+      <div>
+        <span class="inline-block text-xs font-bold tracked text-action bg-action/10 rounded-full px-4 py-1.5 mb-5">Case Study</span>
+        <h3 class="text-2xl sm:text-3xl font-extrabold text-ink mb-3">This space is ready for your next project.</h3>
+        <p class="text-sm text-ink-soft leading-relaxed mb-8">Add a title, a short summary of the brief, and the numbers that prove it worked. Every case study on this page started out exactly like this one.</p>
+        <button class="bg-ink text-white font-bold tracked px-7 py-4 rounded-lg text-xs hover:bg-action transition-colors">ADD A PROJECT</button>
+      </div>
+      <div class="placeholder-tile aspect-video rounded-2xl border-2 border-dashed border-ink/20 bg-mist text-ink/10 flex flex-col items-center justify-center text-center px-6">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0099FF" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <p class="font-bold text-ink tracked text-sm mt-5">ADD PROJECT THUMBNAIL</p>
+        <p class="font-mono text-[11px] text-ink-soft mt-2">16:9 &middot; or embed video link</p>
+      </div>
+    `;
+  }
+
+  function selectWork(index) {
+    workCards.forEach(c => c.classList.remove('is-active'));
+    const card = document.querySelector(`#workGrid .work-card[data-index="${index}"]`);
+    if (card) card.classList.add('is-active');
+
+    workDetail.classList.add('switching');
+    setTimeout(() => {
+      if (index < projects.length) {
+        renderProject(projects[index]);
+      } else {
+        renderEmptyState();
+      }
+      workDetail.classList.remove('switching');
+    }, 180);
+  }
+
+  workCards.forEach(card => {
+    card.addEventListener('click', () => selectWork(parseInt(card.dataset.index, 10)));
+  });
+
+  renderProject(projects[0]);
+</script>
+
+</body>
+</html>
